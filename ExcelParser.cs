@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.IO;
+using System.Windows;
 
 namespace Lab2
 {
@@ -45,11 +46,10 @@ namespace Lab2
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
             return null;
         }
-
     }
 }
 

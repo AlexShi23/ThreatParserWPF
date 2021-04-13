@@ -45,20 +45,12 @@ namespace Lab2
 
         private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            // проверка есть ли файл и если нет, то вывод message box
-
-            // парсинг из файла
-
-            //threats.Add(new Threat(1, "Угроза автоматического распространения вредоносного кода в грид - системе", "Угроза заключается в возможности внедрения и запуска вредоносного кода от имени доверенного процесса на любом из ресурсных центров грид-системы и его автоматического распространения на все узлы грид-системы.",
-            //"Внешний нарушитель со средним потенциалом; Внутренний нарушитель со средним потенциалом", "Ресурсные центры грид - системы", true, true, true));
             dataGrid.ItemsSource = threats;
         }
 
         private void DataGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            /* Threat path = dataGrid.SelectedItem as Threat;
-            MessageBox.Show(" ID: " + path.Id + "\n Исполнитель: " + path.Vocalist + "\n Альбом: " + path.Album
-                + "\n Год: " + path.Year); */
+
         }
 
         public string PageNumberDisplay()

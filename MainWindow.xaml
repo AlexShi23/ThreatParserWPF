@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab2"
         mc:Ignorable="d"
-        Title="Парсер банка данных угроз безопасности информации" Height="514.841" Width="800" WindowStartupLocation="CenterScreen" Icon="icon.png">
+        Title="Парсер банка данных угроз безопасности информации" Height="515" Width="800" WindowStartupLocation="CenterScreen" Icon="icon.png" MinWidth="800" MinHeight="515">
     <Grid>
         <DataGrid x:Name="dataGrid" Margin="10,0,10,67" Loaded="DataGrid_Loaded" MouseUp="DataGrid_MouseUp" IsReadOnly ="true" />
         <StackPanel Grid.Column='1'
