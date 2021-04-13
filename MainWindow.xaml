@@ -1,0 +1,68 @@
+﻿<Window x:Class="Lab2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab2"
+        mc:Ignorable="d"
+        Title="Парсер банка данных угроз безопасности информации" Height="514.841" Width="800" WindowStartupLocation="CenterScreen" Icon="icon.png">
+    <Grid>
+        <DataGrid x:Name="dataGrid" Margin="10,0,10,67" Loaded="DataGrid_Loaded" MouseUp="DataGrid_MouseUp" IsReadOnly ="true" />
+        <StackPanel Grid.Column='1'
+                    Grid.Row='0'
+                    Grid.RowSpan='2'
+                    Grid.ColumnSpan='5'
+                    VerticalAlignment='Bottom'>
+            <StackPanel.Effect>
+                <DropShadowEffect />
+            </StackPanel.Effect>
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint='0.5,1'
+                                     StartPoint='0.5,0'>
+                    <GradientStop Color='Black'
+                                  Offset='1' />
+                    <GradientStop Color='#FF6974DC' />
+                </LinearGradientBrush>
+            </StackPanel.Background>
+
+            <StackPanel Orientation='Horizontal'
+                        Margin='6'
+                        HorizontalAlignment='Center'>
+                <Button x:Name='First'
+                        Padding='4'
+                        Content='&lt;&lt; В начало'
+                        Margin='6'
+                        Click='First_Click'></Button>
+                <Button x:Name='Backwards'
+                        Padding='4'
+                        Content='&lt; Назад'
+                        Margin='6'
+                        Click='Backwards_Click'></Button>
+                <Grid Margin='6'
+                      VerticalAlignment='Center'
+                      HorizontalAlignment='Center'>
+                    <Label x:Name='PageInfo'
+                           Foreground='AntiqueWhite' />
+                </Grid>
+                <Grid VerticalAlignment='Center'
+                      Margin='6'
+                      HorizontalAlignment='Center'>
+                    <ComboBox x:Name='NumberOfRecords'
+                              SelectedIndex='0'
+                              SelectionChanged='NumberOfRecords_SelectionChanged' />
+                </Grid>
+                <Button x:Name='Forward'
+                        Padding='4'
+                        Content='Вперёд &gt;'
+                        Margin='6'
+                        Click='Forward_Click'></Button>
+                <Button x:Name='Last'
+                        Padding='4'
+                        Content='В конец &gt;&gt;'
+                        Margin='6'
+                        Click='Last_Click'></Button>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Window>
