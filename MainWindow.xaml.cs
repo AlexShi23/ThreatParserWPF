@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,11 +25,28 @@ namespace Lab2
     {
         private int numberOfRecPerPage;
         static Paging PagedTable = new Paging();
-        List<Threat> threats = ExcelParser.ReadExcel(@"C:\Users\Саша\source\repos\Lab2\thrlist.xlsx");
+        List<Threat> threats = new List<Threat>();
 
         public MainWindow()
         {
             InitializeComponent();
+            if (!File.Exists(Directory.GetCurrentDirectory() + @"\thrlist.xlsx")) // Если файла с локальной базой данных не существует
+            {
+                MessageBox.Show("Файла с локальной базой не существует. Будет произведена первичная загрузка данных.");
+                try
+                {
+                    WebClient wc = new WebClient();
+                    string url = "https://bdu.fstec.ru/files/documents/thrlist.xlsx";
+                    string savePath = Directory.GetCurrentDirectory();
+                    string name = "thrlist.xlsx";
+                    wc.DownloadFile(url, savePath + "\\" + name);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            threats = ExcelParser.ReadExcel(Directory.GetCurrentDirectory() + @"\thrlist.xlsx");
 
             PagedTable.PageIndex = 1; 
             int[] RecordsToShow = { 15, 20, 30, 50, 100 }; 
