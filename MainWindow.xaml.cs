@@ -67,11 +67,6 @@ namespace Lab2
             dataGrid.ItemsSource = threats;
         }
 
-        private void DataGrid_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         public string PageNumberDisplay()
         {
             int PagedNumber = numberOfRecPerPage * (PagedTable.PageIndex + 1);
@@ -101,17 +96,6 @@ namespace Lab2
             PageInfo.Content = PageNumberDisplay();
         }
 
-        private void First_Click(object sender, RoutedEventArgs e)
-        {
-            dataGrid.ItemsSource = PagedTable.First(threats, numberOfRecPerPage).DefaultView;
-            PageInfo.Content = PageNumberDisplay();
-        }
-
-        private void Last_Click(object sender, RoutedEventArgs e)
-        {
-            dataGrid.ItemsSource = PagedTable.Last(threats, numberOfRecPerPage).DefaultView;
-            PageInfo.Content = PageNumberDisplay();
-        }
     }
 }
 

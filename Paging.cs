@@ -42,13 +42,6 @@ namespace Lab2
             return PagedList;
         }
 
-        public DataTable Last(IList<Threat> ListToPage, int RecordsPerPage)
-        {
-            PageIndex = ListToPage.Count / RecordsPerPage;
-            PagedList = SetPaging(ListToPage, RecordsPerPage);
-            return PagedList;
-        }
-
 		public DataTable SetPaging(IList<Threat> ListToPage, int RecordsPerPage)
         {
             int PageGroup = PageIndex * RecordsPerPage;

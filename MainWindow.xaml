@@ -7,32 +7,23 @@
         mc:Ignorable="d"
         Title="Парсер банка данных угроз безопасности информации" Height="515" Width="800" WindowStartupLocation="CenterScreen" Icon="icon.png" MinWidth="800" MinHeight="515">
     <Grid>
-        <DataGrid x:Name="dataGrid" Margin="10,7,10,61" Loaded="DataGrid_Loaded" MouseUp="DataGrid_MouseUp" IsReadOnly ="true" />
-        <StackPanel Grid.Column='1'
-                    Grid.Row='0'
-                    Grid.RowSpan='2'
-                    Grid.ColumnSpan='5'
-                    VerticalAlignment='Bottom'>
-            <StackPanel.Effect>
+        <DataGrid x:Name="dataGrid" Margin="10,7,10,62" Loaded="DataGrid_Loaded" IsReadOnly ="true" />
+        <Grid VerticalAlignment="Bottom">
+            <Grid.Effect>
                 <DropShadowEffect />
-            </StackPanel.Effect>
-            <StackPanel.Background>
+            </Grid.Effect>
+            <Grid.Background>
                 <LinearGradientBrush EndPoint='0.5,1'
                                      StartPoint='0.5,0'>
                     <GradientStop Color='Black'
                                   Offset='1' />
                     <GradientStop Color='#FF6974DC' />
                 </LinearGradientBrush>
-            </StackPanel.Background>
-
+            </Grid.Background>
+            <Button x:Name="RefreshButton1" Content="Полный вид" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="6" Margin="10"/>
             <StackPanel Orientation='Horizontal'
                         Margin='6'
-                        HorizontalAlignment='Center'>
-                <Button x:Name='First'
-                        Padding='4'
-                        Content='&lt;&lt; В начало'
-                        Margin='6'
-                        Click='First_Click'></Button>
+                        HorizontalAlignment='Center' CanVerticallyScroll="True">
                 <Button x:Name='Backwards'
                         Padding='4'
                         Content='&lt; Назад'
@@ -56,13 +47,8 @@
                         Content='Вперёд &gt;'
                         Margin='6'
                         Click='Forward_Click'></Button>
-                <Button x:Name='Last'
-                        Padding='4'
-                        Content='В конец &gt;&gt;'
-                        Margin='6'
-                        Click='Last_Click'></Button>
             </StackPanel>
-        </StackPanel>
-
+            <Button x:Name="RefreshButton" Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="6" Margin="10"/>
+        </Grid>
     </Grid>
 </Window>
