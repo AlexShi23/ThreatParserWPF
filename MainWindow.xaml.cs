@@ -26,7 +26,8 @@ namespace Lab2
         private int numberOfRecPerPage;
         static Paging PagedTable = new Paging();
         List<Threat> threats = new List<Threat>();
-
+        public bool isBriefView = false;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -62,9 +63,23 @@ namespace Lab2
             dataGrid.ItemsSource = firstTable.DefaultView;
         }
 
-        private void DataGrid_Loaded(object sender, RoutedEventArgs e)
+        public DataTable GetBriefView(DataTable threats)
         {
-            dataGrid.ItemsSource = threats;
+            DataTable briefView = threats.Clone(); // клонируем таблицу, чтобы поменять тип столбца Id и удалить другие столбцы
+            briefView.Columns[0].DataType = typeof(string);
+            foreach (DataRow row in threats.Rows)
+            {
+                briefView.ImportRow(row);
+            }
+            for (int i = briefView.Columns.Count - 1; i >= 2; i--) // удаляем все столбцы, кроме Id и Name
+            {
+                briefView.Columns.RemoveAt(i);
+            }
+            foreach (DataRow row in briefView.Rows)
+            {
+                row[briefView.Columns[0]] = "УБИ." + new string('0', 3 - row[briefView.Columns[0]].ToString().Length) + row[briefView.Columns[0]]; // приводим Id к нужному формату
+            }
+            return briefView;
         }
 
         public string PageNumberDisplay()
@@ -79,13 +94,19 @@ namespace Lab2
 
         private void Forward_Click(object sender, RoutedEventArgs e)
         { 
-            dataGrid.ItemsSource = PagedTable.Next(threats, numberOfRecPerPage).DefaultView;
+            if (isBriefView)
+                dataGrid.ItemsSource = GetBriefView(PagedTable.Next(threats, numberOfRecPerPage)).DefaultView;
+            else
+                dataGrid.ItemsSource = PagedTable.Next(threats, numberOfRecPerPage).DefaultView;
             PageInfo.Content = PageNumberDisplay();
         }
 
         private void Backwards_Click(object sender, RoutedEventArgs e)
         {
-            dataGrid.ItemsSource = PagedTable.Previous(threats, numberOfRecPerPage).DefaultView;
+            if (isBriefView)
+                dataGrid.ItemsSource = GetBriefView(PagedTable.Previous(threats, numberOfRecPerPage)).DefaultView;
+            else
+                dataGrid.ItemsSource = PagedTable.Previous(threats, numberOfRecPerPage).DefaultView;
             PageInfo.Content = PageNumberDisplay();
         }
 
@@ -96,6 +117,21 @@ namespace Lab2
             PageInfo.Content = PageNumberDisplay();
         }
 
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            isBriefView = !isBriefView;
+            DataTable table = PagedTable.SetPaging(threats, numberOfRecPerPage);
+            if (isBriefView)
+            {
+                dataGrid.ItemsSource = GetBriefView(table).DefaultView;
+                ViewButton.Content = "Полный вид";
+            }
+            else
+            {
+                dataGrid.ItemsSource = table.DefaultView;
+                ViewButton.Content = "Краткий вид";
+            }
+        }
     }
 }
 
