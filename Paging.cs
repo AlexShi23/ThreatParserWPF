@@ -55,7 +55,7 @@ namespace Lab2
             return FinalPaging;
         }
 
-		public DataTable PagedTable<T>(IList<T> SourceList)
+		private DataTable PagedTable<T>(IList<T> SourceList)
         {
             Type columnType = typeof(T);
             DataTable TableToReturn = new DataTable();
@@ -73,7 +73,7 @@ namespace Lab2
                     ReturnTableRow[Column.Name] = Column.GetValue(item);
                 }
                 TableToReturn.Rows.Add(ReturnTableRow);
-            } 
+            }
             return TableToReturn;
         }
     }

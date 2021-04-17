@@ -32,11 +32,5 @@ namespace Lab2
         public Threat()
         {
         }
-        public bool Equals(Threat threat)
-        {
-            return Id == threat.Id && Name == threat.Name && Description == threat.Description && Source == threat.Source &&
-                Target == threat.Target && BreachOfConf == threat.BreachOfConf && BreachOfAccess == threat.BreachOfAccess &&
-                BreachOfIntegrity == threat.BreachOfIntegrity;
-        }
     }
 }

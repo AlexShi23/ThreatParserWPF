@@ -26,18 +26,28 @@ namespace Lab2
         private int numberOfRecPerPage;
         static Paging PagedTable = new Paging();
         List<Threat> threats = new List<Threat>();
-        string basePath = Directory.GetCurrentDirectory() + @"\thrlist.xlsx";
         public bool isBriefView = false;
         
         public MainWindow()
         {
             InitializeComponent();
-            if (!File.Exists(basePath)) // Если файла с локальной базой данных не существует
+            if (!File.Exists(Directory.GetCurrentDirectory() + @"\thrlist.xlsx")) // Если файла с локальной базой данных не существует
             {
                 MessageBox.Show("Файла с локальной базой не существует. Будет произведена первичная загрузка данных.");
-                DownloadFile();
+                try
+                {
+                    WebClient wc = new WebClient();
+                    string url = "https://bdu.fstec.ru/files/documents/thrlist.xlsx";
+                    string savePath = Directory.GetCurrentDirectory();
+                    string name = "thrlist.xlsx";
+                    wc.DownloadFile(url, savePath + "\\" + name);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
-            threats = ExcelParser.ReadExcel(basePath);
+            threats = ExcelParser.ReadExcel(Directory.GetCurrentDirectory() + @"\thrlist.xlsx");
 
             PagedTable.PageIndex = 1; 
             int[] RecordsToShow = { 15, 20, 30, 50, 100 }; 
@@ -51,22 +61,6 @@ namespace Lab2
             numberOfRecPerPage = Convert.ToInt32(NumberOfRecords.SelectedItem);
             DataTable firstTable = PagedTable.SetPaging(threats, numberOfRecPerPage);
             dataGrid.ItemsSource = firstTable.DefaultView;
-        }
-
-        public void DownloadFile()
-        {
-            try
-            {
-                WebClient wc = new WebClient();
-                string url = "https://bdu.fstec.ru/files/documents/thrlist.xlsx";
-                string savePath = Directory.GetCurrentDirectory();
-                string name = "thrlist.xlsx";
-                wc.DownloadFile(url, savePath + "\\" + name);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         public DataTable GetBriefView(DataTable threats)
@@ -137,74 +131,6 @@ namespace Lab2
                 dataGrid.ItemsSource = table.DefaultView;
                 ViewButton.Content = "Краткий вид";
             }
-        }
-        public void RefreshLocalCache()
-        {
-            string localBasePath = Directory.GetCurrentDirectory() + @"\local_thrlist.xlsx";
-            if (File.Exists(localBasePath))
-                File.Delete(localBasePath);
-            File.Move(basePath, localBasePath); // сохраняем локальную копию с изменениями
-            List<Threat> localThreats = ExcelParser.ReadExcel(localBasePath);
-            DownloadFile();
-            threats = ExcelParser.ReadExcel(basePath);
-            ShowDifferences(localThreats);
-        }
-        public void ShowDifferences(List<Threat> localThreats)
-        {
-            List<Threat> diffThreats = new List<Threat>();
-            foreach(var threat in threats)
-            {
-                bool found = false;
-                foreach (var localThreat in localThreats)
-                {
-                    if (threat.Id == localThreat.Id)
-                    {
-                        found = true;
-                        if(!threat.Equals(localThreat))
-                        {
-                            diffThreats.Add(threat); // добавить исходную строку в БЫЛО
-                            diffThreats.Add(localThreat); // добавить изменённую строку в СТАЛО
-                        }
-                        break;
-                    }
-                }
-                if(!found) // поиск удалённых
-                {
-                    diffThreats.Add(threat);
-                    diffThreats.Add(new Threat());
-                }
-            }
-            // поиск добавленных
-            foreach (var localThreat in localThreats)
-            {
-                var list = threats.FindAll(t => t.Id == localThreat.Id);
-                if (list.Count == 0)
-                {
-                    diffThreats.Add(new Threat());
-                    diffThreats.Add(localThreat);
-                }
-            }
-             
-            DataTable differences = PagedTable.PagedTable(diffThreats); // list to datatable
-            differences.Columns.Add("Status", typeof(string)); // столбец для формата изменения
-            differences.Columns["Status"].SetOrdinal(0); // перемещение столбца в начало для удобства
-            bool status = true;
-            foreach (DataRow row in differences.Rows) // устанавливаем статус изменения
-            {
-                if (status)
-                    row["Status"] = "Было";
-                else
-                    row["Status"] = "Стало";
-                status = !status;
-            }    
-            new Differences(differences).ShowDialog();
-        }
-
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshButton.IsEnabled = false;
-            RefreshLocalCache();
-            RefreshButton.IsEnabled = true;
         }
     }
 }
