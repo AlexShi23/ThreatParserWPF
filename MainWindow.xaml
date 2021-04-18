@@ -48,7 +48,7 @@
                         Margin='6'
                         Click='Forward_Click'></Button>
             </StackPanel>
-            <Button x:Name="RefreshButton" Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="6" Margin="10"/>
+            <Button x:Name="RefreshButton" Content="Обновить" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="6" Margin="10" Click="RefreshButton_Click"/>
         </Grid>
     </Grid>
 </Window>
