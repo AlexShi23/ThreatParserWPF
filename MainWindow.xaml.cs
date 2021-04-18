@@ -143,61 +143,76 @@ namespace Lab2
             string localBasePath = Directory.GetCurrentDirectory() + @"\local_thrlist.xlsx";
             if (File.Exists(localBasePath))
                 File.Delete(localBasePath);
-            File.Move(basePath, localBasePath); // сохраняем локальную копию с изменениями
-            List<Threat> localThreats = ExcelParser.ReadExcel(localBasePath);
-            DownloadFile();
-            threats = ExcelParser.ReadExcel(basePath);
-            ShowDifferences(localThreats);
-        }
-        public void ShowDifferences(List<Threat> localThreats)
-        {
-            List<Threat> diffThreats = new List<Threat>();
-            foreach(var threat in threats)
+            List<Threat> localThreats = new List<Threat>();
+            bool statusOfUpdate = true;
+            try
             {
-                bool found = false;
-                foreach (var localThreat in localThreats)
+                File.Move(basePath, localBasePath); // сохраняем локальную копию с изменениями
+                localThreats = ExcelParser.ReadExcel(localBasePath);
+                DownloadFile();
+                threats = ExcelParser.ReadExcel(basePath);
+            }
+            catch (Exception ex)
+            {
+                statusOfUpdate = false;
+                MessageBox.Show(ex.Message);
+            }
+            ShowDifferences(localThreats, statusOfUpdate);
+        }
+        public void ShowDifferences(List<Threat> localThreats, bool statusOfUpdate)
+        {
+            if (statusOfUpdate)
+            {
+                List<Threat> diffThreats = new List<Threat>();
+                foreach (var threat in threats)
                 {
-                    if (threat.Id == localThreat.Id)
+                    bool found = false;
+                    foreach (var localThreat in localThreats)
                     {
-                        found = true;
-                        if(!threat.Equals(localThreat))
+                        if (threat.Id == localThreat.Id)
                         {
-                            diffThreats.Add(threat); // добавить исходную строку в БЫЛО
-                            diffThreats.Add(localThreat); // добавить изменённую строку в СТАЛО
+                            found = true;
+                            if (!threat.Equals(localThreat))
+                            {
+                                diffThreats.Add(threat); // добавить исходную строку в БЫЛО
+                                diffThreats.Add(localThreat); // добавить изменённую строку в СТАЛО
+                            }
+                            break;
                         }
-                        break;
+                    }
+                    if (!found) // поиск удалённых
+                    {
+                        diffThreats.Add(threat);
+                        diffThreats.Add(new Threat());
                     }
                 }
-                if(!found) // поиск удалённых
+                // поиск добавленных
+                foreach (var localThreat in localThreats)
                 {
-                    diffThreats.Add(threat);
-                    diffThreats.Add(new Threat());
+                    var list = threats.FindAll(t => t.Id == localThreat.Id);
+                    if (list.Count == 0)
+                    {
+                        diffThreats.Add(new Threat());
+                        diffThreats.Add(localThreat);
+                    }
                 }
-            }
-            // поиск добавленных
-            foreach (var localThreat in localThreats)
-            {
-                var list = threats.FindAll(t => t.Id == localThreat.Id);
-                if (list.Count == 0)
+
+                DataTable differences = PagedTable.PagedTable(diffThreats); // list to datatable
+                differences.Columns.Add("Status", typeof(string)); // столбец для формата изменения
+                differences.Columns["Status"].SetOrdinal(0); // перемещение столбца в начало для удобства
+                bool status = true;
+                foreach (DataRow row in differences.Rows) // устанавливаем статус изменения
                 {
-                    diffThreats.Add(new Threat());
-                    diffThreats.Add(localThreat);
+                    if (status)
+                        row["Status"] = "Было";
+                    else
+                        row["Status"] = "Стало";
+                    status = !status;
                 }
+                new Differences(differences, true).ShowDialog();
             }
-             
-            DataTable differences = PagedTable.PagedTable(diffThreats); // list to datatable
-            differences.Columns.Add("Status", typeof(string)); // столбец для формата изменения
-            differences.Columns["Status"].SetOrdinal(0); // перемещение столбца в начало для удобства
-            bool status = true;
-            foreach (DataRow row in differences.Rows) // устанавливаем статус изменения
-            {
-                if (status)
-                    row["Status"] = "Было";
-                else
-                    row["Status"] = "Стало";
-                status = !status;
-            }    
-            new Differences(differences).ShowDialog();
+            else
+                new Differences(null, false).ShowDialog();
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)

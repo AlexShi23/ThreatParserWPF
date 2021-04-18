@@ -8,8 +8,10 @@
         Title="Результат обновления" Height="490" Width="800" MinWidth="800" MinHeight="490" WindowStartupLocation="CenterScreen" Icon="icon.png">
     <Grid>
         <DataGrid x:Name="dataGrid" Margin="10,25,9.6,10" IsReadOnly ="true" />
-        <Label Content="Обновлённых записей:" HorizontalAlignment="Left" Margin="11,0,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="countOfUpdatedLabel" Content="0" HorizontalAlignment="Left" Margin="145,0,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="updateLabel" Content="Статус обновления:" HorizontalAlignment="Left" Margin="11,0,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="statusOfUpdateLabel" Content="Успешно" HorizontalAlignment="Left" Margin="128,0,0,0" VerticalAlignment="Top" Foreground="Green"/>
+        <Label Content="Обновлённых записей:" HorizontalAlignment="Left" Margin="187,0,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="countOfUpdatedLabel" Content="0" HorizontalAlignment="Left" Margin="321,0,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

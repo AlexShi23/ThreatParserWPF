@@ -20,13 +20,23 @@ namespace Lab2
     /// </summary>
     public partial class Differences : Window
     {
-        public Differences(DataTable differences)
+        public Differences(DataTable differences, bool status)
         {
             InitializeComponent();
-
-            int countOfUpdated = differences.Rows.Count / 2;
-            countOfUpdatedLabel.Content = countOfUpdated;
-            dataGrid.ItemsSource = differences.DefaultView;
+            int countOfUpdated = 0;
+            if (status)
+            {
+                statusOfUpdateLabel.Content = "Успешно";
+                statusOfUpdateLabel.Foreground = Brushes.Green;
+                countOfUpdated = differences.Rows.Count / 2;
+                countOfUpdatedLabel.Content = countOfUpdated;
+                dataGrid.ItemsSource = differences.DefaultView;
+            }
+            else
+            {
+                statusOfUpdateLabel.Content = "Ошибка";
+                statusOfUpdateLabel.Foreground = Brushes.Red;
+            }
         }
     }
 }
